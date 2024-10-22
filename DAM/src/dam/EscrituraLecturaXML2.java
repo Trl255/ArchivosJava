@@ -1,17 +1,14 @@
 
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.*;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class EscrituraLecturaXML2 {
@@ -23,37 +20,43 @@ public class EscrituraLecturaXML2 {
             Document doc = db.newDocument();
 
             // definimos el elemento ra�z del documento
-            Element eRaiz = doc.createElement("concesionario");
+            Element eRaiz = doc.createElement("cine");
             doc.appendChild(eRaiz);
 
             // definimos el nodo que contendr� los elementos
-            Element coches = doc.createElement("coches");
-            eRaiz.appendChild(coches);
+            Element cine = doc.createElement("peliculas");
+            eRaiz.appendChild(cine);
 
-            String[] vehiculos = new String[]{"coche1", "coche2", "coche3", "coche4", "coche5", "coche6", "coche7", "coche8"};
-            String[] matriculas = new String[]{"1111AAA", "2222BBB", "3333CCC", "4444DDD", "AA334A3", "3444BBB", "3333CCC", "4444DDD"};
-            String[] marcas = new String[]{"AUDI", "SEAT", "BMW", "TOYOTA", "AUDI", "AUDI", "BMW", "TOYOTA"};
-            String[] precios = new String[]{"30000", "10000", "20000", "10000", "23444", "12344", "20000", "10000"};
+            String[] peliculas = new String[]{"pelicula1", "pelicula2", "pelicula3", "pelicula4"};
+            String[] nombres = new String[]{"Super 8", "Los Pitufos", "El rey Leon", "La Cenicienta"};
+            String[] directores = new String[]{"Director1", "Director3", "Director4", " "};
+            String[] valoracionPuntos = new String[]{"4", "3", "4", ""};
+            String[] publicos = new String[]{"Adultos", "Todos los públicos", "Infantil", "Infantil"};
 
-            for (int i = 0; i < vehiculos.length; i++) {
+            for (int i = 0; i < peliculas.length; i++) {
 
                 // definimos el nodo que contendr� los elementos
-                Element eCoche = doc.createElement("coche");
-                coches.appendChild(eCoche);
+                Element ePelicula = doc.createElement("pelicula");
+                cine.appendChild(ePelicula);
 
-                // atributo para el nodo coche
-                Element matricula = doc.createElement("matricula");
-                matricula.appendChild(doc.createTextNode(matriculas[i]));
-                eCoche.appendChild(matricula);
+                // atributo para el nodo pelicula
+                Element pelicula = doc.createElement("pelicula");
+                pelicula.appendChild(doc.createTextNode(nombres[i]));
+                ePelicula.appendChild(pelicula);
 
                 // definimos cada uno de los elementos y le asignamos un valor
-                Element eMarca = doc.createElement("marca");
-                eMarca.appendChild(doc.createTextNode(marcas[i]));
-                eCoche.appendChild(eMarca);
+                Element eDirector = doc.createElement("director");
 
-                Element precio = doc.createElement("precio");
-                precio.appendChild(doc.createTextNode(precios[i]));
-                eCoche.appendChild(precio);
+                eDirector.appendChild(doc.createTextNode(directores[i]));
+                ePelicula.appendChild(eDirector);
+
+                Element ePuntos = doc.createElement("puntos");
+                ePuntos.appendChild(doc.createTextNode(valoracionPuntos[i]));
+                ePelicula.appendChild(ePuntos);
+
+                Element ePublicos = doc.createElement("publico");
+                ePublicos.appendChild(doc.createTextNode(publicos[i]));
+                ePelicula.appendChild(ePublicos);
 
             }
 
@@ -61,19 +64,20 @@ public class EscrituraLecturaXML2 {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("concesionario.xml"));
+            StreamResult result = new StreamResult(new File("cines.xml"));
 
             transformer.transform(source, result);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         mostrarInformacion();
 
     }
 
     public static void mostrarInformacion() {
         int contadorAudi = 0;
-        int precioMayor = 0;
+        int puntosMayor = 0;
         boolean existeMatricula = false;
 
         try {
@@ -83,49 +87,34 @@ public class EscrituraLecturaXML2 {
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             // Obtengo el documento, a partir del XML
-            Document documento = builder.parse(new File("concesionario.xml"));
+            Document documento = builder.parse(new File("cines.xml"));
 
-            // Cojo todas las etiquetas coche del documento
-            NodeList listaCoches = documento.getElementsByTagName("coche");
+            // Cojo todas las etiquetas pelicula del documento
+            NodeList listaPeliculas = documento.getElementsByTagName("pelicula");
 
             // Recorro las etiquetas
-            for (int i = 0; i < listaCoches.getLength(); i++) {
+            for (int i = 0; i < listaPeliculas.getLength(); i++) {
                 // Cojo el nodo actual
-                Node nodo = listaCoches.item(i);
+                Node nodo = listaPeliculas.item(i);
 
                 // Compruebo si el nodo es un elemento
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     // Lo transformo a Element
                     Element e = (Element) nodo;
-                    // Obtengo sus hijos
-                    NodeList hijos = e.getChildNodes();
-                    // Recorro sus hijos
-                    for (int j = 0; j < hijos.getLength(); j++) {
-                        // Obtengo al hijo actual
+                    // Obtengo sus hijos    
+                    // asignamos nodos por nombre de etiqueta
+                    Node nodoNombre = e.getElementsByTagName("puntos").item(0);
+                    //Node nodoDirector = e.getElementsByTagName("director").item(0);
+                    //Node nodoPuntos = e.getElementsByTagName("puntos").item(0);
+                    //Node nodoPublico = e.getElementsByTagName("publico").item(0);
 
-                        Node hijo = hijos.item(j);
+                    String nombre = nodoNombre != null ? nodoNombre.getTextContent() : "N/A";
+                    System.out.println(nodoNombre);
 
-                        if (hijo.getNodeName().trim().equalsIgnoreCase("precio") && Integer.parseInt(hijo.getTextContent()) > 22000) {
-                            precioMayor++;
-
-                            //System.out.println(hijo.getTextContent());
-                        }
-                        if (hijo.getNodeName().trim().equalsIgnoreCase("matricula") && hijo.getTextContent().equalsIgnoreCase("3333CCC")) {
-
-                            existeMatricula = true;
-                            //System.out.println(hijo.getTextContent());
-                        }
-                        if (hijo.getTextContent().trim().equalsIgnoreCase("audi")) {
-                            contadorAudi++;
-
-                        }
-
-                    }
                 }
 
             }
-
-            System.out.println("Ejercicio2: " + listaCoches.getLength() + " \nMarca Audi: " + contadorAudi + "\nPrecio mayor de 22.000€: " + precioMayor + "\nExiste matricula 3333CCC:" + (existeMatricula ? " si" : " no"));
+            //System.out.println("Estoy en el segundo: " + listaPeliculas.getLength() + " \nMarca Audi: " + contadorAudi + "\nPrecio mayor de 22.000€: " + puntosMayor + "\nExiste pelicula 3333CCC:" + (existeMatricula ? " si" : " no"));
 
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             System.out.println(ex.getMessage());
