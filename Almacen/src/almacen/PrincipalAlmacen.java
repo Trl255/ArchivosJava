@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> fe773dc (Modificado al 23/10/2024)
 package almacen;
 
 import java.io.FileNotFoundException;
@@ -6,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 public class PrincipalAlmacen {
+<<<<<<< HEAD
 
     public static void main(String[] args) throws ClassNotFoundException {
 
@@ -23,10 +28,29 @@ public class PrincipalAlmacen {
                     a.agregarBebida(b);
                     break;
 
+=======
+    public static void main(String[] args)throws ClassNotFoundException {
+        
+        Almacen a= new Almacen ();
+        
+        Bebida b;
+        for (int i=0; i<10; i++){
+            switch(i%2){
+                case 0:
+                    b= new AguaMineral("manantial1", 1.5, 5, "Bezoya");
+                    a.agregarBebida(b);
+                    break;
+                case 1:
+                    b= new BebidaAzucarada (0.20, true, 1.5, 10, "CocaCola");
+                    a.agregarBebida(b);
+                    break;
+                    
+>>>>>>> fe773dc (Modificado al 23/10/2024)
             }
         }
         a.mostrarBebida(0);
         System.out.println(a.calcularPrecioBebidas());
+<<<<<<< HEAD
 
         a.eliminarBebida(4);
         a.mostrarBebida(0);
@@ -37,6 +61,18 @@ public class PrincipalAlmacen {
         System.out.println(a.calcularPrecioBebidas(0));
 
         /*  try(ObjectOutputStream oos= new ObjectOutputStream (new FileOutputStream("Almacen.dat"))){
+=======
+        
+        a.eliminarBebida(4);
+        a.mostrarBebida(0);
+        System.out.println(a.calcularPrecioBebidas());
+        
+        System.out.println(a.calcularPrecioBebidas("bezoya"));
+        
+        System.out.println(a.calcularPrecioBebidas(0));
+        
+      /*  try(ObjectOutputStream oos= new ObjectOutputStream (new FileOutputStream("Almacen.dat"))){
+>>>>>>> fe773dc (Modificado al 23/10/2024)
             
             while(true){
             Almacen aux=(Almacen)oos.writeObject(oos)
@@ -52,7 +88,13 @@ public class PrincipalAlmacen {
                 }
         }
         
+<<<<<<< HEAD
          */
     }
 
+=======
+        */
+    }
+    
+>>>>>>> fe773dc (Modificado al 23/10/2024)
 }

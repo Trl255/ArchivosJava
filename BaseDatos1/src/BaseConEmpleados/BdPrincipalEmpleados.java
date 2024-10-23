@@ -49,11 +49,16 @@ public class BdPrincipalEmpleados {
                         break;
                     case 5:
                         empleado = EmpleadosDAO.readDAO();
+<<<<<<< HEAD
                         if (empleado == null) {
                             System.out.println("No se ha encontrado el codígo introducido");
                         } else {
                             EmpleadosDAO.updateDAO(empleado);
                         }
+=======
+                        System.out.println(empleado == null ? "":EmpleadosDAO.updateDAO(empleado));
+
+>>>>>>> fe773dc (Modificado al 23/10/2024)
 
                         break;
                     case 6:
