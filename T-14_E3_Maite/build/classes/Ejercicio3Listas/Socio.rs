@@ -1,2 +1,0 @@
-Ejercicio3Listas.ordenarPorNombre
-Ejercicio3Listas.Socio
