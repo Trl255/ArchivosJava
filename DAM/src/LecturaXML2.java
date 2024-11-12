@@ -11,7 +11,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class EscrituraLecturaXML2 {
+public class LecturaXML2 {
 
     public static void main(String[] args) {
         try {
@@ -40,9 +40,9 @@ public class EscrituraLecturaXML2 {
                 cine.appendChild(ePelicula);
 
                 // atributo para el nodo pelicula
-                Element pelicula = doc.createElement("pelicula");
-                pelicula.appendChild(doc.createTextNode(nombres[i]));
-                ePelicula.appendChild(pelicula);
+                Element nombre = doc.createElement("nombre");
+                nombre.appendChild(doc.createTextNode(nombres[i]));
+                ePelicula.appendChild(nombre);
 
                 // definimos cada uno de los elementos y le asignamos un valor
                 Element eDirector = doc.createElement("director");
@@ -76,9 +76,9 @@ public class EscrituraLecturaXML2 {
     }
 
     public static void mostrarInformacion() {
-        int contadorAudi = 0;
-        int puntosMayor = 0;
-        boolean existeMatricula = false;
+
+        boolean valoracionCincoPuntos = false;
+        String puntosV = "5";
 
         try {
             // Creo una instancia de DocumentBuilderFactory
@@ -91,6 +91,8 @@ public class EscrituraLecturaXML2 {
 
             // Cojo todas las etiquetas pelicula del documento
             NodeList listaPeliculas = documento.getElementsByTagName("pelicula");
+            System.out.println("Cantidad de peliculas: " + listaPeliculas.getLength());
+
             for (int i = 0; i < listaPeliculas.getLength(); i++) {
                 Node nodo = listaPeliculas.item(i);
 
@@ -108,21 +110,53 @@ public class EscrituraLecturaXML2 {
                     String puntos = puntosNode != null ? puntosNode.getTextContent() : "N/A";
                     String publico = publicoNode != null ? publicoNode.getTextContent() : "N/A";
 
-                    if (puntos != null && puntos.equals("4")) {
-                        System.out.println("Película: " + nombre);
-                        System.out.println("Director: " + director);
-                        System.out.println("Puntos: " + puntos);
-                        System.out.println("Público: " + publico);
-                        System.out.println("---");
+                    if (nombre != null) {
+                        long contPalabraA = nombre.toUpperCase().chars().filter(ch -> ch == 'A').count();
+                        long contPalabraE = nombre.toUpperCase().chars().filter(ch -> ch == 'E').count();
+                        long contPalabraS = nombre.toUpperCase().chars().filter(ch -> ch == 'S').count();
+
+                        if (contPalabraA > 2) {
+                            System.out.println("La pelicula: " + nombre + " tiene " + contPalabraA + " A\n---------");
+                        }
+                        if (contPalabraE > 2) {
+
+                            System.out.println("La pelicula: " + nombre + " tiene " + contPalabraE + " E\n---------");
+                        }
+
+                        if (contPalabraS > 2) {
+
+                            System.out.println("La pelicula: " + nombre + " tiene " + contPalabraS + " S\n---------");
+
+                        }
                     }
-                    if (puntos != null && publico.equals("Todos los públicos")) {
-                        System.out.println("Película para todos los públicos: " + nombre);
-                        System.out.println("Director: " + director);
-                        System.out.println("Puntos: " + puntos);
-                        System.out.println("Público: " + publico);
-                        System.out.println("---");
+
+                    if (puntos != null) {
+
+                        if (puntos.equals(puntosV)) {
+                            System.out.println("Pelicula con " + puntosV + " puntos:");
+                            System.out.println("Película: " + nombre.toUpperCase());
+                            System.out.println("---------");
+
+                            valoracionCincoPuntos = true;
+                        }
+                    }
+                    if (puntos != null && (publico.equalsIgnoreCase("Todos los públicos") || publico.equalsIgnoreCase("Infantil"))) {
+                        System.out.println("Película para todo los publicos o infantil:\n\"" + publico.toUpperCase() + "\" nombre: \"" + nombre.toUpperCase() + "\"");
+                        System.out.println("---------");
+                    }
+                    if (publico.equalsIgnoreCase("Adultos")) {
+                        System.out.println("Nombre de directores que han dirigido peliculas para adultos " + director.toUpperCase());
+
+                    }
+                    if (puntos == null || puntos == "") {
+                        System.out.println("Nombre de pelicula sin puntos " + nombre.toUpperCase());
+
                     }
                 }
+
+            }
+            if (!valoracionCincoPuntos) {
+                System.out.println("No hay ninguna pelicula con valoración de: " + puntosV + " puntos");
             }
 
             //System.out.println("Estoy en el segundo: " + listaPeliculas.getLength() + " \nMarca Audi: " + contadorAudi + "\nPrecio mayor de 22.000€: " + puntosMayor + "\nExiste pelicula 3333CCC:" + (existeMatricula ? " si" : " no"));
@@ -138,4 +172,4 @@ c.       Nombre de las películas infantiles o para todos los públicos.
 d.      Nombre de las películas cuyo nombre contiene por lo menos un par de “aes”.
 e.       Nombre de los directores que han dirigido películas para Adultos.
 f.        Cantidad de películas cuya valoración en puntos no figura.
-*/
+ */
